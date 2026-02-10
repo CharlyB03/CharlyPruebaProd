@@ -9,7 +9,6 @@ on:
 jobs:
   deploy-logic:
     runs-on: ubuntu-latest
-    # Asegúrate de que este siga siendo tu usuario real
     if: github.repository == 'CharlyB03/CharlyPruebaProd'
 
     steps:
@@ -18,20 +17,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      # --- FASE 1: VALIDACIÓN ---
+      # --- FASE 1: VALIDACIÓN (Solo PR) ---
       - name: Validar Preproducción
         if: github.event_name == 'pull_request'
         run: echo "✅ Preproducción OK"
 
-      # --- FASE 2: PRODUCCIÓN ---
-      - name: Procesar Producción y Actualizar OpenProject
+      # --- FASE 2: PRODUCCIÓN (Merge a Main) ---
+      - name: Actualizar OpenProject
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           OP_API_KEY: ${{ secrets.OP_API_KEY }}
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-          # 1. OBTENER DATOS DE GIT
+          # 1. OBTENER DATOS DEL COMMIT
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           SHA_PARENT=$(git rev-parse --short HEAD^ 2>/dev/null || echo "init")
@@ -42,41 +41,30 @@ jobs:
              FILE_DIFF=$(git --no-pager diff --name-only $SHA_CURRENT $SHA_PARENT)
           fi
 
-          echo "📝 Mensaje del Commit: $COMMIT_MSG"
-
-          # 2. EXTRACCIÓN DEL ID DEL TICKET
+          # 2. EXTRAER ID DEL TICKET
+          # Busca el nombre de la rama en el merge (ej: "from .../Rama40")
           BRANCH_FULL=$(echo "$COMMIT_MSG" | grep -oE 'from .+' | awk '{print $NF}')
           if [ -z "$BRANCH_FULL" ]; then BRANCH_FULL="$COMMIT_MSG"; fi
           
-          # Extrae solo los números al FINAL del texto
+          # Extrae números al final
           TICKET_ID=$(echo "$BRANCH_FULL" | grep -oE '[0-9]+$' | head -n 1)
           
           if [ -z "$TICKET_ID" ]; then
-            echo "⚠️ No se detectó número de ticket. Saliendo..."
+            echo "⚠️ No se detectó ID de ticket en la rama. Omitiendo actualización."
             exit 0
           fi
           
-          echo "🔍 ID Detectado: #$TICKET_ID"
+          echo "🎯 Procesando Ticket #$TICKET_ID"
 
-          # 3. CONEXIÓN Y OBTENCIÓN DE LOCK VERSION
-          echo "📡 Conectando a OpenProject..."
-          
-          # Descargamos la info del ticket
-          curl -s --connect-timeout 10 -u "apikey:$OP_API_KEY" \
-            "$OP_URL/api/v3/work_packages/$TICKET_ID" > response.json
-          
-          # Verificamos si hubo error leyendo el lockVersion
-          LOCK_VERSION=$(cat response.json | jq .lockVersion)
+          # 3. OBTENER LOCK VERSION (Silencioso)
+          LOCK_VERSION=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID" | jq .lockVersion)
           
           if [ "$LOCK_VERSION" == "null" ] || [ -z "$LOCK_VERSION" ]; then
-             echo "❌ Error: No se pudo obtener el ticket. Verifica permisos o existencia."
-             cat response.json
+             echo "❌ Error: No se pudo acceder al ticket #$TICKET_ID (Revisar permisos/existencia)."
              exit 1
           fi
 
-          echo "🔓 Lock Version: $LOCK_VERSION"
-
-          # 4. PREPARAR NOTAS (CORREGIDO: Agregado '|| true' para evitar crash)
+          # 4. PREPARAR NOTA (Con fix || true para evitar error de lectura)
           read -r -d '' NOTE_TEXT <<EOM || true
           *5. Datos de versionamiento en producción*
 
@@ -89,8 +77,6 @@ jobs:
           EOM
 
           # 5. ENVIAR ACTUALIZACIÓN
-          echo "🚀 Enviando actualización..."
-          
           jq -n \
             --argjson lock "$LOCK_VERSION" \
             --arg desc "$NOTE_TEXT" \
@@ -107,7 +93,7 @@ jobs:
             -d @payload.json)
 
           if [ "$HTTP_CODE" -eq 200 ]; then
-            echo "✅ ¡Ticket #$TICKET_ID actualizado con éxito!"
+            echo "✅ ¡Ticket #$TICKET_ID actualizado correctamente!"
           else
             echo "❌ Fallo al actualizar (Código HTTP: $HTTP_CODE)"
             exit 1
