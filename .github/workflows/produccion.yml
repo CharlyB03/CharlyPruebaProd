@@ -10,7 +10,7 @@ jobs:
   deploy-logic:
     runs-on: ubuntu-latest
     # IMPORTANTE: Esto asegura que nadie desde un fork pueda ejecutarlo
-    if: github.repository == 'CharlyPruebaProd/CharlyPruebaProd'
+    if: github.repository == 'CharlyB03/CharlyPruebaProd'
 
     steps:
       - name: Checkout del código
