@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provider>
+
+  <bean>
+    <name>scsl_product</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.scsl_product</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>customer_cancel</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.CustomerFeeToCancel</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>operation_cancel</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.OperationFeeToCancel</class>
+    <singleton>true</singleton>
+  </bean>
+   
+  <bean>
+    <name>profiling</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.profiling</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>profiling1</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.profiling1</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>equifax</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.equifax</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>curl</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.curl</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>crsimulator</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.crsimulator</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>mcsimulation</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.mcsimulation</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>verification_table</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.verification_table</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>verification_check</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.verification_check</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>references_update</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.references_update</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>check_credit_data</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.check_credit_data</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Credit_Creation</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Credit_Creation</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>customer_cancel</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.CustomerFeeToCancel</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>operation_cancel</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.OperationFeeToCancel</class>  
+  </bean>  
+  <bean>
+    <name>files</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.files</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Credit_Operations</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Credit_Operations</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Credit_Operation</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Credit_Operation</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Trade_Creation</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Trade_Creation</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Trade_Status</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Trade_Status</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>Available_Quota</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Available_Quota</class>
+    <singleton>true</singleton>
+  </bean>
+  
+  <bean>
+    <name>check_credit_data2</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Check_credit_data2</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>businessPartner</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.SHPPWS_BusinessPartner</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>CreditOperationByPhoneNumber</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.CreditOperationByPhoneNumber</class>
+    <singleton>true</singleton>
+  </bean>
+  <bean>
+    <name>CreditOperationByEmail</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.CreditOperationByEmail</class>
+    <singleton>true</singleton>
+  </bean>
+   <bean>
+    <name>Imei_Update</name>
+    <class>ec.com.sidesoft.happypay.web.services.service.Imei_Update</class>
+    <singleton>true</singleton>
+  </bean>
+</provider>
+

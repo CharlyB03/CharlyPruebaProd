@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_FIELDGROUP" version="">
+  <row id="109B0D7EA8C94B5FA227E55451909B8E" trl="Y">
+    <value column="Name" isTrl="Y" original="WS NouvoPay Conexion">Servicio NuovoPay</value>
+  </row>
+  <row id="12EA5B94DF9A458DB6453B22120720D6" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Credit Data">Datos de Crédito</value>
+  </row>
+  <row id="27F94539E81E4DF5ABA874A49A9A299F" trl="N">
+    <value column="Name" isTrl="Y" original="RC RegistroCivil Connection">RC RegistroCivil connection</value>
+  </row>
+  <row id="282C7A93C5924E2DB21104B9E545800A" trl="Y">
+    <value column="Name" isTrl="Y" original="Payment Monitor">Monitor de Pagos</value>
+  </row>
+  <row id="29007A2F934E48E4A87B10AA670201D9" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Internal Debts">Deudas Internas</value>
+  </row>
+  <row id="2DE3D6D13BDC40A58EF576A2AB4E6335" trl="Y">
+    <value column="Name" isTrl="Y" original="Score Inclusion">Score Inclusión</value>
+  </row>
+  <row id="37EA9665E1BF4CB0987E93BE8CDD68CD" trl="N">
+    <value column="Name" isTrl="Y" original="WS Provider configuration">Configuración de Proveedor</value>
+  </row>
+  <row id="3EF5998AE9BE4EFAA77AA73BFB766138" trl="Y">
+    <value column="Name" isTrl="Y" original="LN3 Blacklist">Lista Negra de Correos</value>
+  </row>
+  <row id="43416E1C75264D08AFA5BD45413F572E" trl="Y">
+    <value column="Name" isTrl="Y" original="synergy_happycell">Sinergia - Happycel</value>
+  </row>
+  <row id="5C6702809B6A4263A9E5BB4461DF4B72" trl="N">
+    <value column="Name" isTrl="Y" original="Credit Operation">Operación de Crédito</value>
+  </row>
+  <row id="5FB03A581E964E4C86A90B238D138994" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Config Invoice">Factura (Crédito)</value>
+  </row>
+  <row id="6FD4C519F0324BA0A3A4E1A6726D4C54" trl="Y">
+    <value column="Name" isTrl="Y" original="Netby Data">Datos Netby</value>
+  </row>
+  <row id="76A7CFA4CB874061A5A97D55A9547143" trl="Y">
+    <value column="Name" isTrl="Y" original="policy_defeat_first_cuota">Política de Vencimiento 1era Cuota</value>
+  </row>
+  <row id="76B8EB213EC94863AAD50F97362249C1" trl="Y">
+    <value column="Name" isTrl="Y" original="EQ Equifax Connection">EQ Conexión Equifax</value>
+  </row>
+  <row id="81231871E0154F84913FF85A083DAEF7" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Trustonic Conexion">Servicio Trustonic</value>
+  </row>
+  <row id="8D5766345A564991BEDFF6935FEF67B8" trl="Y">
+    <value column="Name" isTrl="Y" original="Profiling Equifax">Perfilamiento Equifax</value>
+  </row>
+  <row id="910EDF1780144BF385C08755A88D2C72" trl="Y">
+    <value column="Name" isTrl="Y" original="Blacklists - Entry">Listas Negras - Ingreso</value>
+  </row>
+  <row id="96F40B9C2B9C484392EDF65103064DBD" trl="Y">
+    <value column="Name" isTrl="Y" original="LN1 Blacklist">Lista Negra de Cédulas</value>
+  </row>
+  <row id="99DC4129D8F44D1CA8E4015B1508CB27" trl="Y">
+    <value column="Name" isTrl="Y" original="EQ Opportunity">EQ Oportunidad</value>
+  </row>
+  <row id="A2B04DEE878F42C8A91EA9080172F587" trl="Y">
+    <value column="Name" isTrl="Y" original="shppws error services message">Mensajes y Respuestas en Servicios Web</value>
+  </row>
+  <row id="AEF32C682E0744569D5ACFCE86978C65" trl="Y">
+    <value column="Name" isTrl="Y" original="SHPPWS_Log">Log</value>
+  </row>
+  <row id="B735303CF2CE4138AECFE45147958182" trl="Y">
+    <value column="Name" isTrl="Y" original="LN2 Blacklis">Lista Negra de Teléfonos</value>
+  </row>
+  <row id="C5AA51A8D13D4959A755E703E02763E9" trl="Y">
+    <value column="Name" isTrl="Y" original="Communication Monitor">Monitor de Comunicación</value>
+  </row>
+  <row id="C97B32C85D6A42F9874261A2DA2CE9D1" trl="Y">
+    <value column="Name" isTrl="Y" original="shppws_Padlock_Release_Service">Servicio Liberación del Candado</value>
+  </row>
+  <row id="F284CD4FC3664DA08E20861DB03808BA" trl="Y">
+    <value column="Name" isTrl="Y" original="Demografic Information">Información Demográfica</value>
+  </row>
+  <row id="F6713B3D362C4CBC8619314EF94C995A" trl="Y">
+    <value column="Name" isTrl="Y" original="Default Partner fields">Campos por defecto para  terceros</value>
+  </row>
+  <row id="FD2D6BCCA05A4404B1B2776B04CE9E42" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Api Service Response">Respuesta del servicio API</value>
+  </row>
+</compiereTrl>

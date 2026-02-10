@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_MENU" version="">
+  <row id="A3D49985FE394033A263D3F2D60177C9" trl="Y">
+    <value column="Name" isTrl="Y" original="Web Services Configuration">Configuración Servicios Web</value>
+    <value column="Description" isTrl="N" original="">Configuración Servicios Web</value>
+  </row>
+  <row id="DCA369FED6EA423EA14CDB4AD5C5F82B" trl="N">
+    <value column="Name" isTrl="N" original="partnerType">partnerType</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+</compiereTrl>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE SHPPEE_RISK_INDEX">
+    <table name="SHPPEE_RISK_INDEX" primaryKey="SHPPEE_RI_KEY">
+      <column name="EM_SHPPWS_DEFAULT_FIELD" primaryKey="false" required="true" type="CHAR" size="1" autoIncrement="false">
+        <default><![CDATA[N]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_SHPPWS_DEFAULT_MESSAGE" primaryKey="false" required="false" type="VARCHAR" size="64" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_SHPPWS_DEFAULT_RSK_SEG" primaryKey="false" required="false" type="CHAR" size="1" autoIncrement="false">
+        <default><![CDATA[N]]></default>
+        <onCreateDefault/>
+      </column>
+    </table>
+  </database>

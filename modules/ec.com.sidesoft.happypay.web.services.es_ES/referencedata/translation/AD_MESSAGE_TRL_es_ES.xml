@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_MESSAGE" version="">
+  <row id="1CD8C8716D0D4775B666B28A3F3DC5D7" trl="N">
+    <value column="MsgText" isTrl="N" original="Error: Ya existe un registro con valor con el check de &quot;Segmento Default Equifax&quot;, solo se permite un registro con este check activado. ">Error: Ya existe un registro con valor con el check de "Segmento Default Equifax", solo se permite un registro con este check activado. </value>
+    <value column="MsgTip" isTrl="N" original=""/>
+  </row>
+</compiereTrl>

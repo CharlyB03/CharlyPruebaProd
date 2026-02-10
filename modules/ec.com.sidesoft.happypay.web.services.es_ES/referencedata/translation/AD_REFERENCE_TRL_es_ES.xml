@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_REFERENCE" version="">
+  <row id="05EBE3F310154FDCA96C8C93E3783566" trl="N">
+    <value column="Name" isTrl="N" original="WS Typelivelihood">WS Typelivelihood</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="0D9929C8459E4B64AF1E627E67F17D46" trl="N">
+    <value column="Name" isTrl="N" original="shppws_interfaceMonitor">shppws_interfaceMonitor</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="2D67EF2AD04744C79D7E229ACA18D9A1" trl="N">
+    <value column="Name" isTrl="N" original="RC_Type_Auth">RC_Type_Auth</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="625825A8D5BB4D2393717F5533C06C3A" trl="N">
+    <value column="Name" isTrl="N" original="WS Codelivelihood">WS Codelivelihood</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="67B3B44BBDA24035BE25DFB0C666294E" trl="Y">
+    <value column="Name" isTrl="Y" original="Artboard">WS Mesas de trabajo</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="680F7F5E4BEA425EA4A7676B0A964204" trl="N">
+    <value column="Name" isTrl="N" original="shppeq_Type_Auth">shppeq_Type_Auth</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="733A979117C94D83958E123ED71BF9C3" trl="Y">
+    <value column="Name" isTrl="N" original="EQ_Type_Auth">EQ_Type_Auth</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="7F4E8C9EAFD84D4E9D8A42C332896125" trl="N">
+    <value column="Name" isTrl="N" original="web services scsl product">web services scsl product</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="84961137B77D415782373BC43CB237F0" trl="N">
+    <value column="Name" isTrl="N" original="EM_Shppws_Dependent">EM_Shppws_Dependent</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="9AC491BBF0924F708D46ADF727AB48D2" trl="N">
+    <value column="Name" isTrl="N" original="shppws_providerMonitor">shppws_providerMonitor</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="9ADCAD9D42DF47349A1016797C5DA3D3" trl="N">
+    <value column="Name" isTrl="N" original="Sinergia TIpo Autenticacion">Sinergia TIpo Autenticacion</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="C547A695742B4D53BFE1C9F0AD45946B" trl="Y">
+    <value column="Name" isTrl="N" original="ws_continues_or_not_blacklists">ws_continues_or_not_blacklists</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="D497FFB32F634621B6E3888E8C2A8612" trl="N">
+    <value column="Name" isTrl="N" original="EM_Shppws_Independent">EM_Shppws_Independent</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="E63511C0F803415EA32D40B72A1B0235" trl="Y">
+    <value column="Name" isTrl="N" original="web services scsl byproduct">web services scsl byproduct</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="FF7855065CF64F97BDD88F36C0A6B6AF" trl="Y">
+    <value column="Name" isTrl="N" original="shppws Segment web services">shppws Segment web services</value>
+    <value column="Description" isTrl="N" original="">shppws Segment web services</value>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+</compiereTrl>

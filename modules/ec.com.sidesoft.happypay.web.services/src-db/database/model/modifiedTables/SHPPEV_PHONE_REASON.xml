@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE SHPPEV_PHONE_REASON">
+    <table name="SHPPEV_PHONE_REASON" primaryKey="SHPPEV_PHONER_KEY">
+      <column name="EM_SHPPWS_ANSWER" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+    </table>
+  </database>

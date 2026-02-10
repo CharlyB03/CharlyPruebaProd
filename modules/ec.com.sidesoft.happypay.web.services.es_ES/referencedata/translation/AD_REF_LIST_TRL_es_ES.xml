@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_REF_LIST" version="">
+  <row id="06EA4BCE741A4CB1BB3CE54C5C27D60F" trl="Y">
+    <value column="Name" isTrl="Y" original="Blacklists - Entry">Listas Negras Ingreso</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="1B999A822C8D421CBE80E2DE4A393B2B" trl="Y">
+    <value column="Name" isTrl="Y" original="Basic Auth">Autenticación básica</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="1D3E76A3799D4C958677EC7F733AD57E" trl="Y">
+    <value column="Name" isTrl="Y" original="REFUSED">RECHAZADO</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="261481136B64492EB4417DF180E7AA9A" trl="Y">
+    <value column="Name" isTrl="Y" original="Email Blacklist ">Listas Negras Correos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="28F9B8E74F8842B08991EC70D5A4DF89" trl="Y">
+    <value column="Name" isTrl="N" original="Recover">Recover</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="3BF24F696B5A411BBA4B74D22E346F65" trl="Y">
+    <value column="Name" isTrl="N" original="Netby">Netby</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="3FB7B4D02F5B404CB280B7718620A5C3" trl="Y">
+    <value column="Name" isTrl="Y" original="Identifier Blacklist">Listas Negras Cédulas</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="46D6BFA79EED4DC7BD4BC64C2B0BA5DC" trl="Y">
+    <value column="Name" isTrl="Y" original="Email Blacklist ">Listas Negras Correos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="49259CAA74304DD5A6B90B42E18F5316" trl="Y">
+    <value column="Name" isTrl="Y" original="Internal Dues Blacklist">Listas Negras Deudas Internas</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="4E6B71FE652045E89881F08CDF0344A6" trl="N">
+    <value column="Name" isTrl="N" original="Basic Auth">Basic Auth</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="59DA905EBC304E058FA4633A32A8B2C8" trl="Y">
+    <value column="Name" isTrl="N" original="INFORMAL">INFORMAL</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="5B4E0C07F4944F5B9A74379284FD3E3D" trl="Y">
+    <value column="Name" isTrl="Y" original="CONTINUE">CONTINUA</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="64C0BD108BA74F9BB445888C4EF90799" trl="Y">
+    <value column="Name" isTrl="Y" original="COM1">COM-S</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="664E9343BF9446769A18226E09662DB3" trl="Y">
+    <value column="Name" isTrl="N" original="Recover">Recover</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="67406ADCECD940D4BE27C72A504715B1" trl="Y">
+    <value column="Name" isTrl="Y" original="Curl">Enrolamiento</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="68FE9061AD0B468095990AB5B0CDDE55" trl="Y">
+    <value column="Name" isTrl="N" original="SideSoft">SideSoft</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="6E816397D4404CAB8511C4943AD87101" trl="Y">
+    <value column="Name" isTrl="Y" original="Identifier Blacklist">Listas Negras Cédulas</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="70A6892FBB454222919B2262DF2C171D" trl="Y">
+    <value column="Name" isTrl="Y" original="Communication Monitor">Monitor de Comunicación</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="77EA0A17223647879679AC902F15B988" trl="Y">
+    <value column="Name" isTrl="N" original="Equifax">Equifax</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="802F927123C94249831F3673CB6AF6F3" trl="Y">
+    <value column="Name" isTrl="Y" original="Authentication token">Autenticación token</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="88BB6981B3A04806A26705D0D5AF6CD0" trl="Y">
+    <value column="Name" isTrl="N" original="Oauth2.0">Oauth2.0</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="8B05078CC4B74694B94553D6C1D10E7D" trl="Y">
+    <value column="Name" isTrl="Y" original="Cellphone Blacklist ">Listas Negras Teléfonos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="9A9F3021BD734CF29C8823D637B6BB10" trl="Y">
+    <value column="Name" isTrl="Y" original="Table Activation">Activación de Mesa</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="9D021306656A4F77B2F2504F21625AC6" trl="Y">
+    <value column="Name" isTrl="Y" original="Create Credit">Creación del Crédito</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="A0567646C8DA4F4C9D56F42326F96413" trl="Y">
+    <value column="Name" isTrl="Y" original="Payment Monitor">Monitor de Pagos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="A7020DA3791D469A855D048C7E48C0C2" trl="Y">
+    <value column="Name" isTrl="Y" original="CONTINUE">CONTINUA</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="A822564127AF486A94DF26A4E19D9BA1" trl="N">
+    <value column="Name" isTrl="N" original="Authentication token">Authentication token</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="A8F1FBEA210C423085CA3617172D63F3" trl="Y">
+    <value column="Name" isTrl="N" original="Netby">Netby</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="B0E1091F69AC4871B14548E2F22DAC15" trl="Y">
+    <value column="Name" isTrl="N" original="Equifax">Equifax</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="BB0762E73ED545C8A3716236FE6C36E0" trl="Y">
+    <value column="Name" isTrl="Y" original="Profiling">Perfilamiento</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="C12483AEF6D8445F832EDEC43E869D7A" trl="N">
+    <value column="Name" isTrl="N" original="synergy Happycel">synergy Happycel</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="CAADEEB4381A40788E63A67DD0E20FB1" trl="Y">
+    <value column="Name" isTrl="Y" original="Basic Auth">Autenticación básica</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="CC095568E3084A32822CBDA07CD94C28" trl="Y">
+    <value column="Name" isTrl="Y" original="Civil Registry">Registro Civil</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="CC7665D39F57430098486F4A18887C1B" trl="Y">
+    <value column="Name" isTrl="Y" original="Payments">Pagos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="CCABD6DC193345A9803DCDB0052A9038" trl="Y">
+    <value column="Name" isTrl="Y" original="Internal Dues Blacklist">Listas Negras Deudas Internas</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="D72B5FD2AE7A41EF9CD4C58D79C809D8" trl="Y">
+    <value column="Name" isTrl="Y" original="Authentication token">Autenticación token</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="DBBE96CA7BAC4F6A95E6063E966FB924" trl="Y">
+    <value column="Name" isTrl="Y" original="REFUSED">RECHAZADO</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="E3151AB7592C4587A2B45F7F2577DB86" trl="Y">
+    <value column="Name" isTrl="N" original="FORMAL">FORMAL</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="E390A6CB7E62462BA0C66DB164C93710" trl="Y">
+    <value column="Name" isTrl="Y" original="PRIVATE">PRIVADO</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="E4D278248E774EFD96469E8866F8AA37" trl="Y">
+    <value column="Name" isTrl="Y" original="Cellphone Blacklist ">Listas Negras Teléfonos</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+  <row id="FB03CACCEE9B467FBAB7C715152C5B9E" trl="Y">
+    <value column="Name" isTrl="Y" original="PUBLIC">PUBLICO</value>
+    <value column="Description" isTrl="N" original=""/>
+  </row>
+</compiereTrl>

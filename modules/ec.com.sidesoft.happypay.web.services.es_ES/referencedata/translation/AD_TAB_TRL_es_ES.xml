@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_TAB" version="">
+  <row id="213DA05AFAA44D1AAF8657B0F31A48BC" trl="Y">
+    <value column="Name" isTrl="Y" original="Files and Links">Documentos de Crédito</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original="">Documentos de Crédito</value>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="2A64AF53C4D0474F88741A8099490304" trl="Y">
+    <value column="Name" isTrl="Y" original="IMEI history">Historial IMEI</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="3DE7DE37E861423D8CF1DB0023FE8AA6" trl="N">
+    <value column="Name" isTrl="N" original="Config">Config</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="572C4E8BFD8242B083103F2C7B08B0AE" trl="Y">
+    <value column="Name" isTrl="Y" original="SHPPWS Monitor">Monitor</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="95E17C3D17184C6C993CB7E077C68413" trl="Y">
+    <value column="Name" isTrl="Y" original="Detail current debt data">Detalle datos deuda actual</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original="">Detalle datos deuda actual</value>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="C7F25E2E103B48029D28DD36A6DB7B91" trl="N">
+    <value column="Name" isTrl="N" original="Registro Civil">Registro Civil</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="D1FA92533AB84A4288423CEF77734479" trl="N">
+    <value column="Name" isTrl="N" original="Partnertype">Partnertype</value>
+    <value column="CommitWarning" isTrl="N" original=""/>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Filtername" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+</compiereTrl>

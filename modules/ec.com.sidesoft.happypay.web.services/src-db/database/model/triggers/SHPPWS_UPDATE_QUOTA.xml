@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+  <database name="TRIGGER SHPPWS_UPDATE_QUOTA">
+    <trigger name="SHPPWS_UPDATE_QUOTA" table="C_BPARTNER" fires="before" insert="true" update="true" delete="false" foreach="row">
+      <body><![CDATA[BEGIN
+	-- 0. Asignar a 0 si es nulo
+	IF :NEW.em_shpct_quota_used IS NULL THEN
+        :NEW.em_shpct_quota_used := 0;
+    END IF;	
+	-- 0. Asignar a 0 si es nulo
+	IF :NEW.em_shppws_profiled_quota IS NULL THEN
+        :NEW.em_shppws_profiled_quota := 0;
+    END IF;	
+
+        -- 1. Valido si cupo usado y cupo perfilado tienen valores 
+    IF :NEW.em_shpct_quota_used IS NOT NULL AND :NEW.em_shppws_profiled_quota IS NOT NULL THEN
+        -- 2. Resto cupo perfilado - cupo usado
+        :NEW.em_shppws_available_quota := GREATEST(:NEW.em_shppws_profiled_quota - :NEW.em_shpct_quota_used, 0);
+    END IF;
+
+    RETURN NEW;
+END SHPPWS_UPDATE_QUOTA
+]]></body>
+    </trigger>
+  </database>

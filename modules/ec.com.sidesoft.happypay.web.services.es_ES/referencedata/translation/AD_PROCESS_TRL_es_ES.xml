@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<compiereTrl baseLanguage="en_US" language="es_ES" table="AD_PROCESS" version="">
+  <row id="363DADFED705423FB0E89F56DE141064" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Return ">WS Retornar</value>
+    <value column="Description" isTrl="N" original="">Retornar</value>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="4C07ADA3ED51450B8728C9E901C40F14" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Complete Call Center">WS Completar FCR-C</value>
+    <value column="Description" isTrl="N" original="">Completar FCR-C</value>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="5CFC902B3725404383D513259BC0BE45" trl="Y">
+    <value column="Name" isTrl="Y" original="WS Reject">WS Rechazar</value>
+    <value column="Description" isTrl="N" original="">Rechazar</value>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="98C9E494059F4CB7B9CD4F419F920E53" trl="Y">
+    <value column="Name" isTrl="Y" original="Purge Logged Records">Depuración de Logs</value>
+    <value column="Description" isTrl="N" original=""/>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+  <row id="B7AC0CEF26F44E6F9A709395D50CBBA9" trl="Y">
+    <value column="Name" isTrl="Y" original="Release Padlock">Liberación del Candado</value>
+    <value column="Description" isTrl="N" original="">Liberación del Candado</value>
+    <value column="Help" isTrl="N" original=""/>
+  </row>
+</compiereTrl>
