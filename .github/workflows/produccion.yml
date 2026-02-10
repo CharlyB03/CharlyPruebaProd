@@ -31,7 +31,7 @@ jobs:
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-          # 1. OBTENER DATOS DE GIT
+          # 1. OBTENER DATOS DE GIThubbb
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           SHA_PARENT=$(git rev-parse --short HEAD^ 2>/dev/null || echo "init")
