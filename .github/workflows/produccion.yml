@@ -9,7 +9,7 @@ on:
 jobs:
   deploy-logic:
     runs-on: ubuntu-latest
-    # CORREGIDO: Tu usuario y repositorio real
+    # Asegúrate de que este siga siendo tu usuario real
     if: github.repository == 'CharlyB03/CharlyPruebaProd'
 
     steps:
@@ -18,12 +18,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      # --- FASE 1: VALIDACIÓN (Solo en Pull Request) ---
+      # --- FASE 1: VALIDACIÓN ---
       - name: Validar Preproducción
         if: github.event_name == 'pull_request'
         run: echo "✅ Preproducción OK"
 
-      # --- FASE 2: PRODUCCIÓN (Solo al hacer Merge a Main) ---
+      # --- FASE 2: PRODUCCIÓN ---
       - name: Procesar Producción y Actualizar OpenProject
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
@@ -31,7 +31,7 @@ jobs:
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-          # 1. OBTENER DATOS DE GIThubbb
+          # 1. OBTENER DATOS DE GIT
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           SHA_PARENT=$(git rev-parse --short HEAD^ 2>/dev/null || echo "init")
@@ -45,61 +45,39 @@ jobs:
           echo "📝 Mensaje del Commit: $COMMIT_MSG"
 
           # 2. EXTRACCIÓN DEL ID DEL TICKET
-          # Busca el nombre de la rama en el mensaje de merge (ej: "from .../RamaPrueba38")
           BRANCH_FULL=$(echo "$COMMIT_MSG" | grep -oE 'from .+' | awk '{print $NF}')
+          if [ -z "$BRANCH_FULL" ]; then BRANCH_FULL="$COMMIT_MSG"; fi
           
-          # Si fue un push directo, usamos el mensaje entero
-          if [ -z "$BRANCH_FULL" ]; then
-             BRANCH_FULL="$COMMIT_MSG"
-          fi
-
           # Extrae solo los números al FINAL del texto
           TICKET_ID=$(echo "$BRANCH_FULL" | grep -oE '[0-9]+$' | head -n 1)
           
           if [ -z "$TICKET_ID" ]; then
-            echo "⚠️ No se detectó número de ticket al final del nombre (ej: Rama38)."
+            echo "⚠️ No se detectó número de ticket. Saliendo..."
             exit 0
           fi
           
           echo "🔍 ID Detectado: #$TICKET_ID"
 
-          # ---------------------------------------------------------
-          # 3. DIAGNÓSTICO DE CONEXIÓN (MODO DEBUG)
-          # ---------------------------------------------------------
-          echo "📡 Conectando a: $OP_URL/api/v3/work_packages/$TICKET_ID"
+          # 3. CONEXIÓN Y OBTENCIÓN DE LOCK VERSION
+          echo "📡 Conectando a OpenProject..."
           
-          # Intentamos conectar capturando TODOS los detalles (-v) y errores
-          # --connect-timeout 10: Si tarda más de 10s, es un firewall bloqueando
-          curl -v --connect-timeout 10 -u "apikey:$OP_API_KEY" \
-            "$OP_URL/api/v3/work_packages/$TICKET_ID" > response_body.txt 2> response_log.txt
+          # Descargamos la info del ticket
+          curl -s --connect-timeout 10 -u "apikey:$OP_API_KEY" \
+            "$OP_URL/api/v3/work_packages/$TICKET_ID" > response.json
           
-          # Leemos el código HTTP del log
-          HTTP_STATUS=$(cat response_log.txt | grep "< HTTP/" | tail -1 | awk '{print $3}')
+          # Verificamos si hubo error leyendo el lockVersion
+          LOCK_VERSION=$(cat response.json | jq .lockVersion)
           
-          echo "---------------------------------------------------"
-          echo "📄 LOG DE CONEXIÓN (Para Debug):"
-          cat response_log.txt
-          echo "---------------------------------------------------"
-          echo "📄 CUERPO DE LA RESPUESTA:"
-          cat response_body.txt
-          echo "---------------------------------------------------"
-
-          # Si no hay respuesta válida, detenemos aquí para ver el error
-          if [ -z "$HTTP_STATUS" ] || [ "$HTTP_STATUS" != "200" ]; then
-             echo "❌ FALLO DE CONEXIÓN. Código HTTP: $HTTP_STATUS"
-             echo "REVISA EL LOG DE ARRIBA:"
-             echo " - Si dice 'Connection timed out': Tu servidor bloquea a GitHub (Firewall)."
-             echo " - Si dice '401 Unauthorized': El Token está mal."
-             echo " - Si dice '404 Not Found': La URL está mal o el ticket no existe."
+          if [ "$LOCK_VERSION" == "null" ] || [ -z "$LOCK_VERSION" ]; then
+             echo "❌ Error: No se pudo obtener el ticket. Verifica permisos o existencia."
+             cat response.json
              exit 1
           fi
 
-          # Si llegamos aquí, la conexión funcionó. Extraemos lockVersion.
-          LOCK_VERSION=$(cat response_body.txt | jq .lockVersion)
           echo "🔓 Lock Version: $LOCK_VERSION"
 
-          # 4. PREPARAR NOTAS
-          read -r -d '' NOTE_TEXT <<EOM
+          # 4. PREPARAR NOTAS (CORREGIDO: Agregado '|| true' para evitar crash)
+          read -r -d '' NOTE_TEXT <<EOM || true
           *5. Datos de versionamiento en producción*
 
           *Versionado en:* Comreivic (GitHub)
@@ -110,7 +88,9 @@ jobs:
           $FILE_DIFF
           EOM
 
-          # 5. ENVIAR CAMBIOS A OPENPROJECT
+          # 5. ENVIAR ACTUALIZACIÓN
+          echo "🚀 Enviando actualización..."
+          
           jq -n \
             --argjson lock "$LOCK_VERSION" \
             --arg desc "$NOTE_TEXT" \
@@ -121,10 +101,14 @@ jobs:
               journal: { raw: $desc }
             ' > payload.json
 
-          echo "🚀 Enviando actualización..."
-          curl -s -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
             -H "Content-Type: application/json" \
             -u "apikey:$OP_API_KEY" \
-            -d @payload.json
+            -d @payload.json)
 
-          echo "✅ ¡Ticket #$TICKET_ID actualizado correctamente!"
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ ¡Ticket #$TICKET_ID actualizado con éxito!"
+          else
+            echo "❌ Fallo al actualizar (Código HTTP: $HTTP_CODE)"
+            exit 1
+          fi
