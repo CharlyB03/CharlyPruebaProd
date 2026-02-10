@@ -74,6 +74,7 @@ public class Release_padlock extends DalBaseProcess {
 			instance = accesInfo.getInstancePurpose();
 
 		} finally {
+main
 			OBContext.restorePreviousMode();
 		}
 
