@@ -27,14 +27,12 @@ jobs:
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-         # --- OBTENER DATOS ---
+          # --- OBTENER DATOS ---
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # Buscamos los últimos 2 merges: el 1ro es el actual, el 2do es el anterior
-          # 'tail -n 1' nos garantiza quedarnos con el SHA del Merge anterior (#17)
+          # Obtiene el SHA del Merge anterior ignorando commits individuales
           SHA_PARENT=$(git log --merges -n 2 --pretty=%h | tail -n 1)
-          
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           # --- EXTRAER ID TICKET ---
@@ -47,15 +45,22 @@ jobs:
             exit 0
           fi
 
+          # Exportar para posibles pasos futuros (como correo)
+          echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+
           # --- NOTA 1: DATOS DE VERSIONAMIENTO ---
+          # IMPORTANTE: El EOM de cierre NO debe tener espacios al inicio
           read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
           *Versionado en:* $REPO_NAME (GitHub)
           *Commit:* $COMMIT_MSG
           *sha1:* $SHA_CURRENT
           *sha1 Parent:* $SHA_PARENT
-          *Extraer Archivos*
+          *Extraer Archivos:*
+          \`\`\`bash
           git --no-pager diff --name-only $SHA_PARENT $SHA_CURRENT
+          \`\`\`
           EOM
 
           # --- NOTA 2: DETALLE DE ARCHIVOS ---
@@ -74,7 +79,7 @@ jobs:
           \`\`\`
           EOM
 
-          # --- ENVIAR NOTAS ---
+          # --- FUNCIÓN PARA ENVIAR NOTAS ---
           send_note() {
             jq -n --arg desc "$1" '{ comment: { raw: $desc } }' > payload.json
             curl -s -o /dev/null -X POST "$OP_URL/api/v3/work_packages/$TICKET_ID/activities" \
@@ -83,7 +88,6 @@ jobs:
               -d @payload.json
           }
 
-          # Enviar ambas notas por separado
           send_note "$VERSION_NOTE"
           send_note "$DETAILS_NOTE"
           echo "✅ Notas técnicas enviadas."
@@ -92,9 +96,7 @@ jobs:
           LOCK_VERSION=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID" | jq .lockVersion)
           
           if [ "$LOCK_VERSION" != "null" ] && [ ! -z "$LOCK_VERSION" ]; then
-            jq -n \
-              --argjson lock "$LOCK_VERSION" \
-              --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
+            jq -n --argjson lock "$LOCK_VERSION" --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
               '{ lockVersion: $lock, _links: { status: { href: $status_href } } }' > status_payload.json
 
             curl -s -o /dev/null -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
