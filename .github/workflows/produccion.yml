@@ -31,9 +31,8 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # Busca 2 ultimos commit 
+          # Busca el Merge de Pull Request anterior oficial
           SHA_PARENT=$(git log --merges --grep="Merge pull request" -n 2 --pretty=%h | tail -n 1)
-          
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           # --- EXTRAER ID TICKET ---
@@ -46,10 +45,11 @@ jobs:
             exit 0
           fi
 
-          # Exportar para uso en otros pasos
+          # Exportar para uso en el paso de correo
           echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
           echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
           echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
 
           # --- DATOS DE VERSIONAMIENTO ---
           read -r -d '' VERSION_NOTE <<EOM || true
@@ -106,3 +106,30 @@ jobs:
               -d @status_payload.json
             echo "✅ Estado actualizado."
           fi
+
+      - name: Notificar Despliegue por Correo
+        if: success() && github.event_name == 'push'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🚀 Producción: Ticket #${{ env.TICKET_ID }} Actualizado"
+          to: charly.bazan.2003@gmail.com
+          from: GitHub Actions <noreply@github.com>
+          body: |
+            Se ha completado el despliegue a producción con éxito.
+
+            DETALLES:
+            -----------------------------------------
+            Repositorio: ${{ env.REPO_NAME }}
+            Ticket: #${{ env.TICKET_ID }}
+            Commit: ${{ env.COMMIT_MSG }}
+            SHA Actual: ${{ env.SHA_CURRENT }}
+            
+            ESTADO:
+            El ticket ha sido movido a 'Compilado Producción' en OpenProject.
+
+            Detalles del ticket:
+            ${{ secrets.OP_INSTANCE_URL }}/work_packages/${{ env.TICKET_ID }}
