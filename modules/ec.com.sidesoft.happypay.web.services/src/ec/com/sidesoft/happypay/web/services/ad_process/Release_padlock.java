@@ -58,7 +58,9 @@ public class Release_padlock extends DalBaseProcess {
 
 	@Override
 	protected void doExecute(ProcessBundle bundle) throws Exception {
+<<<<<DB59
 		// TODO Auto-generated method stubasdasdsad
+		// TODO Auto-generated method stubASDASD main
 		logger = bundle.getLogger();
 		padlockReleaseOperation();
 	}

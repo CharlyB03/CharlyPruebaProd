@@ -31,9 +31,10 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # Cambiado a $1 para obtener el SHA del Merge anterior en la rama main
-          SHA_PARENT_RAW=$(git log -1 --pretty=%p | awk '{print $1}')
-          SHA_PARENT=$(git rev-parse --short $SHA_PARENT_RAW)
+          # FILTRO CLAVE: Buscamos solo los últimos 2 commits que digan "Merge pull request"
+          # Esto ignora los merges de 'main' a 'rama' y commits individuales de archivos
+          SHA_PARENT=$(git log --merges --grep="Merge pull request" -n 2 --pretty=%h | tail -n 1)
+          
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           # --- EXTRAER ID TICKET ---
@@ -46,6 +47,11 @@ jobs:
             exit 0
           fi
 
+          # Exportar para uso en otros pasos (como el correo)
+          echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
+          echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
+          echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
+
           # --- NOTA 1: DATOS DE VERSIONAMIENTO ---
           read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
@@ -53,12 +59,13 @@ jobs:
           *Commit:* $COMMIT_MSG
           *sha1:* $SHA_CURRENT
           *sha1 Parent:* $SHA_PARENT
-          *Extraer Archivos*
+          *Extraer Archivos:*
+          \`\`\`bash
           git --no-pager diff --name-only $SHA_PARENT $SHA_CURRENT
+          \`\`\`
           EOM
 
           # --- NOTA 2: DETALLE DE ARCHIVOS ---
-          # Transforma "modules/ventas/sub/clase.java" en "modules/ventas/.../clase.java"
           FILES_LIST=$(git diff --name-only $SHA_PARENT $SHA_CURRENT | awk -F/ '{
             if (NF > 3) {
               print $1"/"$2"/.../"$NF
@@ -83,7 +90,6 @@ jobs:
               -d @payload.json
           }
 
-          # Enviar ambas notas por separado
           send_note "$VERSION_NOTE"
           send_note "$DETAILS_NOTE"
           echo "✅ Notas técnicas enviadas."
@@ -92,16 +98,12 @@ jobs:
           LOCK_VERSION=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID" | jq .lockVersion)
           
           if [ "$LOCK_VERSION" != "null" ] && [ ! -z "$LOCK_VERSION" ]; then
-            jq -n \
-              --argjson lock "$LOCK_VERSION" \
-              --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
+            jq -n --argjson lock "$LOCK_VERSION" --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
               '{ lockVersion: $lock, _links: { status: { href: $status_href } } }' > status_payload.json
 
             curl -s -o /dev/null -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
               -H "Content-Type: application/json" \
               -u "apikey:$OP_API_KEY" \
               -d @status_payload.json
-            echo "✅ Estado actualizado a Compilado Producción."
-          else
-            echo "❌ No se pudo actualizar el estado."
+            echo "✅ Estado actualizado."
           fi
