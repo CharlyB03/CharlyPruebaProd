@@ -20,35 +20,23 @@ jobs:
         if: github.event_name == 'pull_request'
         run: echo "✅ Preproducción OK"
 
-      # --- ESTRATEGIA 3: VALIDACIÓN Y AVISO DE ENTORNO ---
-     #-- - name: Validar Destino de Producción
-       #-- run: |
-          #--if [ "${{ github.repository }}" != "CharlyB03/CharlyPruebaProd" ]; then
-            #--echo "::warning title=Entorno de Fork detectado::Este flujo no enviará datos a OpenProject. El versionamiento y las notas solo se activa al hacer Merge hacia el repositorio principal."
-         #-- fi
-
       - name: Actualizar OpenProject
-        # Colocar el nombre del repositorio y el usuario para evitar que se realice desde un fork
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'CharlyB03/CharlyPruebaProd'
         env:
           OP_API_KEY: ${{ secrets.OP_API_KEY }}
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-          # ---  OBTENER DATOS ---
+          # --- OBTENER DATOS ---
           COMMIT_MSG=$(git log -1 --pretty=%s)
-          
-          # SHA1 Actual 
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # SHA1 Parent
-          SHA_PARENT_RAW=$(git log -1 --pretty=%p | awk '{print $NF}')
+          # Cambiado a $1 para obtener el SHA del Merge anterior en la rama main
+          SHA_PARENT_RAW=$(git log -1 --pretty=%p | awk '{print $1}')
           SHA_PARENT=$(git rev-parse --short $SHA_PARENT_RAW)
-          
-          # Nombre del Repositorio
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
-          # ---  EXTRAER ID TICKET ---
+          # --- EXTRAER ID TICKET ---
           BRANCH_FULL=$(echo "$COMMIT_MSG" | grep -oE 'from .+' | awk '{print $NF}')
           if [ -z "$BRANCH_FULL" ]; then BRANCH_FULL="$COMMIT_MSG"; fi
           TICKET_ID=$(echo "$BRANCH_FULL" | grep -oE '[0-9]+$' | head -n 1)
@@ -57,47 +45,63 @@ jobs:
             echo "⚠️ No se detectó ID. Fin."
             exit 0
           fi
-          
-          echo "🎯 Ticket #$TICKET_ID | SHA: $SHA_CURRENT | Parent: $SHA_PARENT"
 
-          # --- CONSTRUIR NOTA CON EL COMANDO TEXTUAL ---
-          read -r -d '' NOTE_TEXT <<EOM || true
+          # --- NOTA 1: DATOS DE VERSIONAMIENTO ---
+          read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
-
           *Versionado en:* $REPO_NAME (GitHub)
           *Commit:* $COMMIT_MSG
           *sha1:* $SHA_CURRENT
           *sha1 Parent:* $SHA_PARENT
-          *Extraer Archivos:*
-          git --no-pager diff --name-only $SHA_CURRENT $SHA_PARENT
+          *Extraer Archivos*
+          git --no-pager diff --name-only $SHA_PARENT $SHA_CURRENT
           EOM
 
-          # --- ENVIAR NOTA ---
-          jq -n --arg desc "$NOTE_TEXT" '{ comment: { raw: $desc } }' > comment_payload.json
-          
-          curl -s -o /dev/null -X POST "$OP_URL/api/v3/work_packages/$TICKET_ID/activities" \
-            -H "Content-Type: application/json" \
-            -u "apikey:$OP_API_KEY" \
-            -d @comment_payload.json
-            
-          echo "✅ Nota con comando enviada."
+          # --- NOTA 2: DETALLE DE ARCHIVOS ---
+          # Transforma "modules/ventas/sub/clase.java" en "modules/ventas/.../clase.java"
+          FILES_LIST=$(git diff --name-only $SHA_PARENT $SHA_CURRENT | awk -F/ '{
+            if (NF > 3) {
+              print $1"/"$2"/.../"$NF
+            } else {
+              print $0
+            }
+          }' | sort -u)
 
-          # ---  ACTUALIZAR ESTADO ---
+          read -r -d '' DETAILS_NOTE <<EOM || true
+          *Detalle de los archivos:*
+          \`\`\`text
+          $FILES_LIST
+          \`\`\`
+          EOM
+
+          # --- FUNCIÓN PARA ENVIAR NOTAS ---
+          send_note() {
+            jq -n --arg desc "$1" '{ comment: { raw: $desc } }' > payload.json
+            curl -s -o /dev/null -X POST "$OP_URL/api/v3/work_packages/$TICKET_ID/activities" \
+              -H "Content-Type: application/json" \
+              -u "apikey:$OP_API_KEY" \
+              -d @payload.json
+          }
+
+          # Enviar ambas notas por separado
+          send_note "$VERSION_NOTE"
+          send_note "$DETAILS_NOTE"
+          echo "✅ Notas técnicas enviadas."
+
+          # --- ACTUALIZAR ESTADO ---
           LOCK_VERSION=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID" | jq .lockVersion)
           
-          if [ "$LOCK_VERSION" == "null" ] || [ -z "$LOCK_VERSION" ]; then
-             echo "❌ Error al leer ticket."
-             exit 1
+          if [ "$LOCK_VERSION" != "null" ] && [ ! -z "$LOCK_VERSION" ]; then
+            jq -n \
+              --argjson lock "$LOCK_VERSION" \
+              --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
+              '{ lockVersion: $lock, _links: { status: { href: $status_href } } }' > status_payload.json
+
+            curl -s -o /dev/null -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
+              -H "Content-Type: application/json" \
+              -u "apikey:$OP_API_KEY" \
+              -d @status_payload.json
+            echo "✅ Estado actualizado a Compilado Producción."
+          else
+            echo "❌ No se pudo actualizar el estado."
           fi
-
-          jq -n \
-            --argjson lock "$LOCK_VERSION" \
-            --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
-            '{ lockVersion: $lock, _links: { status: { href: $status_href } } }' > status_payload.json
-
-          curl -s -o /dev/null -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
-            -H "Content-Type: application/json" \
-            -u "apikey:$OP_API_KEY" \
-            -d @status_payload.json
-            
-          echo "✅ Estado actualizado."
