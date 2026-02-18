@@ -20,6 +20,13 @@ jobs:
         if: github.event_name == 'pull_request'
         run: echo "✅ Preproducción OK"
 
+      # --- ESTRATEGIA 3: VALIDACIÓN Y AVISO DE ENTORNO ---
+      - name: Validar Destino de Producción
+        run: |
+          if [ "${{ github.repository }}" != "CharlyB03/CharlyPruebaProd" ]; then
+            echo "::warning title=Entorno de Fork detectado::Este flujo no enviará datos a OpenProject. El versionamiento y las notas solo se activa al hacer Merge hacia el repositorio principal."
+          fi
+
       - name: Actualizar OpenProject
         # Colocar el nombre del repositorio y el usuario para evitar que se realice desde un fork
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'CharlyB03/CharlyPruebaProd'
@@ -62,7 +69,9 @@ jobs:
           *sha1:* $SHA_CURRENT
           *sha1 Parent:* $SHA_PARENT
           *Extraer Archivos:*
+          \`\`\`bash
           git --no-pager diff --name-only $SHA_CURRENT $SHA_PARENT
+          \`\`\`
           EOM
 
           # --- ENVIAR NOTA ---
