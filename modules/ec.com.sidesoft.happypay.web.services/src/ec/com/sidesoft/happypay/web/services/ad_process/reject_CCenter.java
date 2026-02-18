@@ -43,6 +43,7 @@ public class reject_CCenter extends DalBaseProcess {
 			if (to_artboard == null) {
 				to_artboard = "CC";
 			}
+			// Prueba
 			String CallCenter = objCreditOperation.getCallCenterStatus();
 			String SCom = objCreditOperation.getSComStatus();
 			String COM2 = objCreditOperation.getCom2Status();
