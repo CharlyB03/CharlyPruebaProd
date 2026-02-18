@@ -27,13 +27,14 @@ jobs:
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
           OP_NEW_STATUS_ID: ${{ secrets.OP_STATUS_ID }}
         run: |
-          # --- OBTENER DATOS ---
+         # --- OBTENER DATOS ---
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # Cambiado a $1 para obtener el SHA del Merge anterior en la rama main
-          SHA_PARENT_RAW=$(git log -1 --pretty=%p | awk '{print $1}')
-          SHA_PARENT=$(git rev-parse --short $SHA_PARENT_RAW)
+          # Buscamos los últimos 2 merges: el 1ro es el actual, el 2do es el anterior
+          # 'tail -n 1' nos garantiza quedarnos con el SHA del Merge anterior (#17)
+          SHA_PARENT=$(git log --merges -n 2 --pretty=%h | tail -n 1)
+          
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           # --- EXTRAER ID TICKET ---
@@ -58,7 +59,6 @@ jobs:
           EOM
 
           # --- NOTA 2: DETALLE DE ARCHIVOS ---
-          # Transforma "modules/ventas/sub/clase.java" en "modules/ventas/.../clase.java"
           FILES_LIST=$(git diff --name-only $SHA_PARENT $SHA_CURRENT | awk -F/ '{
             if (NF > 3) {
               print $1"/"$2"/.../"$NF
@@ -74,7 +74,7 @@ jobs:
           \`\`\`
           EOM
 
-          # --- FUNCIÓN PARA ENVIAR NOTAS ---
+          # --- ENVIAR NOTAS ---
           send_note() {
             jq -n --arg desc "$1" '{ comment: { raw: $desc } }' > payload.json
             curl -s -o /dev/null -X POST "$OP_URL/api/v3/work_packages/$TICKET_ID/activities" \
