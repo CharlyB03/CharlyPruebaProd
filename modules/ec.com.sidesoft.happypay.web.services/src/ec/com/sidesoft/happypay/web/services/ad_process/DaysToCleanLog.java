@@ -26,7 +26,7 @@ public class DaysToCleanLog extends DalBaseProcess {
 
 	@Override
 	protected void doExecute(ProcessBundle bundle) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubASDASDSA
 		logger = bundle.getLogger();
 		ConnectionProvider conn = bundle.getConnection();
 		try {
