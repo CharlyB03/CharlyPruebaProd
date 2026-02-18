@@ -23,7 +23,7 @@ public class new_binnacle_opcredit {
 	public OBError createBinnacle(SscfCreditOperation objCreditOperation, String from, String until, String event,
 			String observation) {
 		OBError msg = new OBError();
-		// OBContext.setAdminMode(true);
+		// OBContext.setAdminMode(true);asdasdas
 		OBCriteria<SscfBinnacle> queryBinnacles = OBDal.getInstance().createCriteria(SscfBinnacle.class);
 		queryBinnacles.add(Restrictions.eq(SscfBinnacle.PROPERTY_SSCFCREDITOPERATION, objCreditOperation));
 		List<SscfBinnacle> listBinnacles = queryBinnacles.list();

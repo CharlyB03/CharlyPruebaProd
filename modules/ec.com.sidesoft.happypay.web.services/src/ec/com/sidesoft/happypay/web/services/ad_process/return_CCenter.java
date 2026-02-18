@@ -20,7 +20,7 @@ import ec.com.sidesoft.credit.factory.SscfCreditOperation;
 
 public class return_CCenter extends DalBaseProcess {
 	// nombre de la clase en java
-	// ec.com.sidesoft.happypay.web.services.ad_process.complete_CCenter
+	// ec.com.sidesoft.happypay.web.services.ad_process.complete_CCenterasdasdsadas
 	// private final Logger logger = Logger.getLogger(Sbc_Reactivate.class);
 	@Override
 	public void doExecute(ProcessBundle bundle) throws Exception {
