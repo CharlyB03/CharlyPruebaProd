@@ -31,8 +31,10 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # Obtiene el SHA del Merge anterior ignorando commits individuales
-          SHA_PARENT=$(git log --merges -n 2 --pretty=%h | tail -n 1)
+          # FILTRO CLAVE: Buscamos solo los últimos 2 commits que digan "Merge pull request"
+          # Esto ignora los merges de 'main' a 'rama' y commits individuales de archivos
+          SHA_PARENT=$(git log --merges --grep="Merge pull request" -n 2 --pretty=%h | tail -n 1)
+          
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           # --- EXTRAER ID TICKET ---
@@ -45,12 +47,12 @@ jobs:
             exit 0
           fi
 
-          # Exportar para posibles pasos futuros (como correo)
+          # Exportar para uso en otros pasos (como el correo)
           echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
-          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
+          echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
 
           # --- NOTA 1: DATOS DE VERSIONAMIENTO ---
-          # IMPORTANTE: El EOM de cierre NO debe tener espacios al inicio
           read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
           *Versionado en:* $REPO_NAME (GitHub)
@@ -103,7 +105,5 @@ jobs:
               -H "Content-Type: application/json" \
               -u "apikey:$OP_API_KEY" \
               -d @status_payload.json
-            echo "✅ Estado actualizado a Compilado Producción."
-          else
-            echo "❌ No se pudo actualizar el estado."
+            echo "✅ Estado actualizado."
           fi
