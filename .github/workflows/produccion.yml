@@ -30,8 +30,6 @@ jobs:
           # --- OBTENER DATOS ---
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
-          
-          # Busca el Merge de Pull Request anterior oficial
           SHA_PARENT=$(git log --merges --grep="Merge pull request" -n 2 --pretty=%h | tail -n 1)
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
@@ -45,13 +43,29 @@ jobs:
             exit 0
           fi
 
-          # Exportar para uso en el paso de correo
+          # --- OBTENER EMAIL DEL RESPONSABLE EN OPENPROJECT ---
+          # 1. Obtenemos el link al responsable desde el Work Package
+          WP_DATA=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID")
+          RESPONSIBLE_HREF=$(echo "$WP_DATA" | jq -r '._links.responsible.href // empty')
+          
+          if [ ! -z "$RESPONSIBLE_HREF" ]; then
+            # 2. Consultamos el email en el perfil del responsable
+            USER_EMAIL=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL$RESPONSIBLE_HREF" | jq -r '.email')
+            echo "TARGET_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
+            echo "🎯 Responsable detectado: $USER_EMAIL"
+          else
+            # Fallback a tu correo si no hay responsable asignado
+            echo "TARGET_EMAIL=charly.bazan.2003@gmail.com" >> $GITHUB_ENV
+            echo "⚠️ No hay responsable asignado. Usando fallback."
+          fi
+
+          # Exportar datos para el paso de correo
           echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
           echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
           echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
 
-          # --- DATOS DE VERSIONAMIENTO ---
+          # --- DATOS DE VERSIONAMIENTO Y ARCHIVOS (NOTAS) ---
           read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
           *Versionado en:* $REPO_NAME (GitHub)
@@ -64,13 +78,8 @@ jobs:
           \`\`\`
           EOM
 
-          # --- DETALLE DE ARCHIVOS ---
           FILES_LIST=$(git diff --name-only $SHA_PARENT $SHA_CURRENT | awk -F/ '{
-            if (NF > 3) {
-              print $1"/"$2"/.../"$NF
-            } else {
-              print $0
-            }
+            if (NF > 3) { print $1"/"$2"/.../"$NF } else { print $0 }
           }' | sort -u)
 
           read -r -d '' DETAILS_NOTE <<EOM || true
@@ -80,31 +89,22 @@ jobs:
           \`\`\`
           EOM
 
-          # --- FUNCIÓN PARA ENVIAR NOTAS ---
           send_note() {
             jq -n --arg desc "$1" '{ comment: { raw: $desc } }' > payload.json
             curl -s -o /dev/null -X POST "$OP_URL/api/v3/work_packages/$TICKET_ID/activities" \
-              -H "Content-Type: application/json" \
-              -u "apikey:$OP_API_KEY" \
-              -d @payload.json
+              -H "Content-Type: application/json" -u "apikey:$OP_API_KEY" -d @payload.json
           }
 
           send_note "$VERSION_NOTE"
           send_note "$DETAILS_NOTE"
-          echo "✅ Notas técnicas enviadas."
 
           # --- ACTUALIZAR ESTADO ---
-          LOCK_VERSION=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID" | jq .lockVersion)
-          
-          if [ "$LOCK_VERSION" != "null" ] && [ ! -z "$LOCK_VERSION" ]; then
+          LOCK_VERSION=$(echo "$WP_DATA" | jq .lockVersion)
+          if [ "$LOCK_VERSION" != "null" ]; then
             jq -n --argjson lock "$LOCK_VERSION" --arg status_href "/api/v3/statuses/$OP_NEW_STATUS_ID" \
               '{ lockVersion: $lock, _links: { status: { href: $status_href } } }' > status_payload.json
-
             curl -s -o /dev/null -X PATCH "$OP_URL/api/v3/work_packages/$TICKET_ID" \
-              -H "Content-Type: application/json" \
-              -u "apikey:$OP_API_KEY" \
-              -d @status_payload.json
-            echo "✅ Estado actualizado."
+              -H "Content-Type: application/json" -u "apikey:$OP_API_KEY" -d @status_payload.json
           fi
 
       - name: Notificar Despliegue por Correo
@@ -116,7 +116,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "🚀 Producción: Ticket #${{ env.TICKET_ID }} Actualizado"
-          to: charly.bazan.2003@gmail.com
+          to: ${{ env.TARGET_EMAIL }}
           from: GitHub Actions <noreply@github.com>
           body: |
             Se ha completado el despliegue a producción con éxito.
