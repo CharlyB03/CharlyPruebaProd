@@ -29,6 +29,7 @@ public class complete_CCenter extends DalBaseProcess {
 		OBContext.setAdminMode(true);
 
 		try {
+			//PRUEBAAAA
 			String idScom1 = (String) bundle.getParams().get("Sscf_Com1_ID");
 			SscfCom1 objCOM = OBDal.getInstance().get(SscfCom1.class, idScom1);
 			String observation = "Completado";
