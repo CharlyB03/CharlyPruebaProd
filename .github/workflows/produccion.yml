@@ -31,8 +31,7 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%s)
           SHA_CURRENT=$(git rev-parse --short HEAD)
           
-          # FILTRO CLAVE: Buscamos solo los últimos 2 commits que digan "Merge pull request"
-          # Esto ignora los merges de 'main' a 'rama' y commits individuales de archivos
+          # Busca 2 ultimos commit 
           SHA_PARENT=$(git log --merges --grep="Merge pull request" -n 2 --pretty=%h | tail -n 1)
           
           REPO_NAME=${GITHUB_REPOSITORY#*/}
@@ -47,12 +46,12 @@ jobs:
             exit 0
           fi
 
-          # Exportar para uso en otros pasos (como el correo)
+          # Exportar para uso en otros pasos
           echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
           echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
           echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
 
-          # --- NOTA 1: DATOS DE VERSIONAMIENTO ---
+          # --- DATOS DE VERSIONAMIENTO ---
           read -r -d '' VERSION_NOTE <<EOM || true
           *Datos de versionamiento en producción*
           *Versionado en:* $REPO_NAME (GitHub)
@@ -65,7 +64,7 @@ jobs:
           \`\`\`
           EOM
 
-          # --- NOTA 2: DETALLE DE ARCHIVOS ---
+          # --- DETALLE DE ARCHIVOS ---
           FILES_LIST=$(git diff --name-only $SHA_PARENT $SHA_CURRENT | awk -F/ '{
             if (NF > 3) {
               print $1"/"$2"/.../"$NF
