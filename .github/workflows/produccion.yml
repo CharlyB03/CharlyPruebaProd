@@ -20,8 +20,38 @@ jobs:
         if: github.event_name == 'pull_request'
         run: echo "✅ Preproducción OK"
 
+      - name: Verificar si es Fork
+        id: check-fork
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%s)
+          # Detectar si el merge viene de un fork (formato: "from usuario/repo")
+          if echo "$COMMIT_MSG" | grep -qE "from [^/]+/[^/]+" && ! echo "$COMMIT_MSG" | grep -q "from ${{ github.repository_owner }}/"; then
+            echo "IS_FORK=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Detectado merge desde fork. Se omitirán notas y correo."
+          else
+            echo "IS_FORK=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Verificar si es Merge de Pull Request
+        id: check-merge
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%s)
+          if echo "$COMMIT_MSG" | grep -qE "^Merge pull request #[0-9]+"; then
+            echo "IS_MERGE=true" >> $GITHUB_OUTPUT
+            echo "✅ Es un merge de Pull Request."
+          else
+            echo "IS_MERGE=false" >> $GITHUB_OUTPUT
+            echo "⚠️ No es un merge de PR. Se omitirán notas y correo."
+          fi
+
       - name: Actualizar OpenProject
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'CharlyB03/CharlyPruebaProd'
+        if: |
+          github.event_name == 'push' && 
+          github.ref == 'refs/heads/main' && 
+          github.repository == 'CharlyB03/CharlyPruebaProd' &&
+          github.event.repository.fork == false &&
+          steps.check-fork.outputs.IS_FORK == 'false' &&
+          steps.check-merge.outputs.IS_MERGE == 'true'
         env:
           OP_API_KEY: ${{ secrets.OP_API_KEY }}
           OP_URL: ${{ secrets.OP_INSTANCE_URL }}
@@ -40,23 +70,8 @@ jobs:
           
           if [ -z "$TICKET_ID" ]; then
             echo "⚠️ No se detectó ID. Fin."
+            echo "SHOULD_NOTIFY=false" >> $GITHUB_ENV
             exit 0
-          fi
-
-          # --- OBTENER EMAIL DEL RESPONSABLE EN OPENPROJECT ---
-          # 1. Obtenemos el link al responsable desde el Work Package
-          WP_DATA=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID")
-          RESPONSIBLE_HREF=$(echo "$WP_DATA" | jq -r '._links.responsible.href // empty')
-          
-          if [ ! -z "$RESPONSIBLE_HREF" ]; then
-            # 2. Consultamos el email en el perfil del responsable
-            USER_EMAIL=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL$RESPONSIBLE_HREF" | jq -r '.email')
-            echo "TARGET_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
-            echo "🎯 Responsable detectado: $USER_EMAIL"
-          else
-            # Fallback a tu correo si no hay responsable asignado
-            echo "TARGET_EMAIL=charly.bazan.2003@gmail.com" >> $GITHUB_ENV
-            echo "⚠️ No hay responsable asignado. Usando fallback."
           fi
 
           # Exportar datos para el paso de correo
@@ -64,6 +79,20 @@ jobs:
           echo "SHA_CURRENT=$SHA_CURRENT" >> $GITHUB_ENV
           echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_ENV
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+
+          # --- OBTENER EMAIL DEL RESPONSABLE EN OPENPROJECT ---
+          WP_DATA=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL/api/v3/work_packages/$TICKET_ID")
+          RESPONSIBLE_HREF=$(echo "$WP_DATA" | jq -r '._links.responsible.href // empty')
+          
+          if [ -z "$RESPONSIBLE_HREF" ]; then
+            echo "⚠️ No hay responsable asignado. No se enviará correo."
+            echo "SHOULD_NOTIFY=false" >> $GITHUB_ENV
+          else
+            USER_EMAIL=$(curl -s -u "apikey:$OP_API_KEY" "$OP_URL$RESPONSIBLE_HREF" | jq -r '.email')
+            echo "TARGET_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
+            echo "SHOULD_NOTIFY=true" >> $GITHUB_ENV
+            echo "🎯 Responsable detectado: $USER_EMAIL"
+          fi
 
           # --- DATOS DE VERSIONAMIENTO Y ARCHIVOS (NOTAS) ---
           read -r -d '' VERSION_NOTE <<EOM || true
@@ -108,7 +137,12 @@ jobs:
           fi
 
       - name: Notificar Despliegue por Correo
-        if: success() && github.event_name == 'push'
+        if: |
+          success() && 
+          github.event_name == 'push' &&
+          env.SHOULD_NOTIFY == 'true' &&
+          steps.check-fork.outputs.IS_FORK == 'false' &&
+          steps.check-merge.outputs.IS_MERGE == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
