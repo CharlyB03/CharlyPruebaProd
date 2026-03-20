@@ -23,13 +23,14 @@ public class complete_CCenter extends DalBaseProcess {
 	// nombre de la clase en java
 	// ec.com.sidesoft.happypay.web.services.ad_process.complete_CCenter
 	// private final Logger logger = Logger.getLogger(Sbc_Reactivate.class);asdasds
+	// prueba
 	@Override
 	public void doExecute(ProcessBundle bundle) throws Exception {
 		OBError msg = new OBError();
 		OBContext.setAdminMode(true);
 
 		try {
-			//PRUEBAAAA
+			// PRUEBAAAA
 			String idScom1 = (String) bundle.getParams().get("Sscf_Com1_ID");
 			SscfCom1 objCOM = OBDal.getInstance().get(SscfCom1.class, idScom1);
 			String observation = "Completado";
